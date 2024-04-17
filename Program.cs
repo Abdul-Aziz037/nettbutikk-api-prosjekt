@@ -21,6 +21,7 @@ builder.Services.AddAutoMapper(typeof(ProductMapper));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // registrerer services
+//skriv inn her den service koden
 
 
 
