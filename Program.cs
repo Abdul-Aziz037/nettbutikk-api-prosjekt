@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using nettbutikk_api.Data;
+using nettbutikk_api.Repositories.Interfaces;
+using nettbutikk_api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // DbMysql
 builder.Services.AddDbContext<ProductDbContext>(options =>
