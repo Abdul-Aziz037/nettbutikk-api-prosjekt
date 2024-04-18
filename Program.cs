@@ -3,6 +3,7 @@ using nettbutikk_api.Data;
 using nettbutikk_api.Repositories.Interfaces;
 using nettbutikk_api.Repositories;
 using nettbutikk_api.Mappers;
+using nettbutikk_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddAutoMapper(typeof(ProductMapper));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // registrerer services
+builder.Services.AddScoped<IProductService, ProductService>();
 //skriv inn her den service koden
 
 
