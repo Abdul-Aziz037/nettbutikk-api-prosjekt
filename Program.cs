@@ -23,7 +23,6 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // registrerer services
 builder.Services.AddScoped<IProductService, ProductService>();
-//skriv inn her den service koden
 
 
 
