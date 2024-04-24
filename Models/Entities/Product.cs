@@ -18,6 +18,6 @@ namespace nettbutikk_api.Models.Entities
         public int UserId { get; set; } // Referanse til brukerens ID
 
         // Navigasjonsegenskap for User (valgfritt)
-        public User User { get; set; }
+        public User? User { get; set; }
     } 
 }

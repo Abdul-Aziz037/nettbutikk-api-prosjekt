@@ -12,8 +12,8 @@ namespace nettbutikk_api.Data
         }
 
         // tabellen lages
-        public DbSet<User> users { get; set; }
-        public DbSet<Product> products { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Product> Products { get; set; }
 
     }
 }

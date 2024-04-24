@@ -16,24 +16,24 @@ public class ProductRepository : IProductRepository
 
     public async Task<ICollection<Product>> GetProductsAsync()
     {
-        return await _context.products.ToListAsync();
+        return await _context.Products.ToListAsync();
     }
 
     public async Task<Product?> GetProductByIdAsync(int productId)
     {
-        return await _context.products.FirstOrDefaultAsync(p => p.Id == productId);
+        return await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
     }
 
     public async Task<Product> AddProductAsync(Product product)
     {
-        var nyProduct = await _context.products.AddAsync(product);
+        var nyProduct = await _context.Products.AddAsync(product);
         _context.SaveChanges();
         return nyProduct.Entity;
     }
 
     public async Task<Product?> UpdateProductAsync(int productId, Product product)
     {
-        var productToUpdate = await _context.products.FindAsync(productId);
+        var productToUpdate = await _context.Products.FindAsync(productId);
 
         if (productToUpdate != null && product != null)
         {
