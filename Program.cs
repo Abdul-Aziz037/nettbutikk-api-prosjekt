@@ -4,6 +4,7 @@ using nettbutikk_api.Repositories.Interfaces;
 using nettbutikk_api.Repositories;
 using nettbutikk_api.Mappers;
 using nettbutikk_api.Services;
+using nettbutikk_api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,12 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 // registrerer services
 builder.Services.AddScoped<IProductService, ProductService>();
+
+// Registrer repository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Registrer service
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 
