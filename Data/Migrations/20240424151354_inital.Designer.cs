@@ -11,7 +11,7 @@ using nettbutikk_api.Data;
 
 namespace nettbutikk_api.Data.Migrations
 {
-    [DbContext(typeof(ProductDbContext))]
+    [DbContext(typeof(nettButikkDbContext))]
     [Migration("20240424151354_inital")]
     partial class inital
     {

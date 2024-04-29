@@ -10,7 +10,7 @@ using nettbutikk_api.Data;
 
 namespace nettbutikk_api.Data.Migrations
 {
-    [DbContext(typeof(ProductDbContext))]
+    [DbContext(typeof(nettButikkDbContext))]
     partial class ProductDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

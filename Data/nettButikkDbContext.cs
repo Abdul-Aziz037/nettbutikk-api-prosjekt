@@ -3,9 +3,9 @@ using nettbutikk_api.Models.Entities;
 
 namespace nettbutikk_api.Data
 {
-    public class ProductDbContext : DbContext
+    public class nettButikkDbContext : DbContext
     {
-        public ProductDbContext(DbContextOptions<ProductDbContext> options)
+        public nettButikkDbContext(DbContextOptions<nettButikkDbContext> options)
             : base(options)
         {
 
