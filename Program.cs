@@ -18,23 +18,20 @@ builder.Services.AddSwaggerGen();
 
 //register mappers
 builder.Services.AddAutoMapper(typeof(ProductMapper));
+builder.Services.AddAutoMapper(typeof(UserMapper));
 
 // registrerer repos
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // registrerer services
 builder.Services.AddScoped<IProductService, ProductService>();
-
-// Registrer repository
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// Registrer service
 builder.Services.AddScoped<IUserService, UserService>();
 
 
 
 // registere DbMysql
-builder.Services.AddDbContext<ProductDbContext>(options =>
+builder.Services.AddDbContext<nettButikkDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
 

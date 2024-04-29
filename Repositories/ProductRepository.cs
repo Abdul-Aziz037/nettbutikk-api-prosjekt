@@ -7,9 +7,9 @@ namespace nettbutikk_api.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly ProductDbContext _context;
+    private readonly nettButikkDbContext _context;
 
-    public ProductRepository(ProductDbContext context)
+    public ProductRepository(nettButikkDbContext context)
     {
         _context = context;
     }

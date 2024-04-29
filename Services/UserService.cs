@@ -20,7 +20,7 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
-    public async Task<List<UserDTO>> GetUsersAsync()
+    public async Task<ICollection<UserDTO>> GetAllUsersAsync()
     {
         var users = await _userRepository.GetUsersAsync();
         var dto = users.Select(user => _mapper.Map<UserDTO>(user)).ToList();
@@ -36,8 +36,9 @@ public class UserService : IUserService
     public async Task<UserDTO?> AddUserAsync(UserDTO userDto)
     {
         var user = _mapper.Map<User>(userDto);
-        var newUser = await _userRepository.AddUserAsync(user);
-        return _mapper.Map<UserDTO>(newUser);
+
+        var res = await _userRepository.AddUserAsync(user);
+        return res != null ? _mapper.Map<UserDTO>(res) : null;
     }
 
     public async Task<UserDTO?> UpdateUserAsync(int userId, UserDTO userDto)

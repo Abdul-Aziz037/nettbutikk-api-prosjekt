@@ -9,9 +9,9 @@ namespace nettbutikk_api.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserDbContext _context;
+        private readonly nettButikkDbContext _context;
 
-        public UserRepository(UserDbContext context)
+        public UserRepository(nettButikkDbContext context)
         {
             _context = context;
         }
@@ -39,8 +39,11 @@ namespace nettbutikk_api.Repositories
 
             if (userToUpdate != null && user != null)
             {
-                userToUpdate.Name = user.Name;
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.LastName = user.LastName;
+                userToUpdate.Username = user.Username;
                 userToUpdate.Email = user.Email;
+                userToUpdate.Updated = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
             }
