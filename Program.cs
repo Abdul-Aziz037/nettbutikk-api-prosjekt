@@ -19,6 +19,7 @@ builder.Services.AddSwaggerGen();
 //register mappers
 builder.Services.AddAutoMapper(typeof(ProductMapper));
 builder.Services.AddAutoMapper(typeof(UserMapper));
+builder.Services.AddAutoMapper(typeof(UserRegMapper));
 
 // registrerer repos
 builder.Services.AddScoped<IProductRepository, ProductRepository>();

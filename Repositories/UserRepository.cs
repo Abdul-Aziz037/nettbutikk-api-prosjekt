@@ -21,9 +21,9 @@ namespace nettbutikk_api.Repositories
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<User> AddUserAsync(User user)
@@ -33,7 +33,7 @@ namespace nettbutikk_api.Repositories
             return newUser.Entity;
         }
 
-        public async Task<User> UpdateUserAsync(int userId, User user)
+        public async Task<User?> UpdateUserAsync(int userId, User user)
         {
             var userToUpdate = await _context.Users.FindAsync(userId);
 
@@ -50,7 +50,7 @@ namespace nettbutikk_api.Repositories
             return userToUpdate;
         }
 
-        public async Task<User> DeleteUserByIdAsync(int userId)
+        public async Task<User?> DeleteUserByIdAsync(int userId)
         {
             var userToDelete = await GetUserByIdAsync(userId);
             if (userToDelete != null)
@@ -59,6 +59,14 @@ namespace nettbutikk_api.Repositories
                 await _context.SaveChangesAsync();
             }
             return userToDelete;
+        }
+
+        public async Task<User?> GetUserByNameAsync(string name)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(name));
+
+            return user;
+
         }
     }
 }

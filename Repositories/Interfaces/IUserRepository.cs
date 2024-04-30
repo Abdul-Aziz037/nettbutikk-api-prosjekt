@@ -7,9 +7,10 @@ namespace nettbutikk_api.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<List<User>> GetUsersAsync();
-        Task<User> GetUserByIdAsync(int userId);
+        Task<User?> GetUserByIdAsync(int userId);
+        Task<User?> GetUserByNameAsync(string name);
         Task<User> AddUserAsync(User user);
-        Task<User> UpdateUserAsync(int userId, User user);
-        Task<User> DeleteUserByIdAsync(int userId);
+        Task<User?> UpdateUserAsync(int userId, User user);
+        Task<User?> DeleteUserByIdAsync(int userId);
     }
 }
