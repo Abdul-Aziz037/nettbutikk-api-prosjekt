@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using nettbutikk_api.Mappers;
 using nettbutikk_api.Models.DTOs;
 using nettbutikk_api.Models.Entities;
 using nettbutikk_api.Repositories.Interfaces;
@@ -23,7 +25,7 @@ public class UserService : IUserService
     {
         _userRepository = userRepository;
         _userMapper = mapper;
-        _userRegMapper = mapper;
+        _userRegMapper = new MapperConfiguration(cfg => cfg.AddProfile<UserRegMapper>()).CreateMapper();
         _config=config;
     }
 
@@ -68,10 +70,11 @@ public class UserService : IUserService
         return deletedUser != null ? _userMapper.Map<UserDTO>(deletedUser) : null;
     }
 
+    
     public async Task<UserDTO?> RegisterAsync(UserRegDTO userRegDTO)
     {
         var user = _userRegMapper.Map<User>(userRegDTO);
-        // string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRegDto.Password);
+
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userRegDTO.Password);
 
         var res = await _userRepository.AddUserAsync(user);
@@ -79,49 +82,54 @@ public class UserService : IUserService
         return _userMapper.Map<UserDTO?>(res!);
     }
 
+    
     public async Task<string?> LoginAsync(string userName, string password)
     {
+        //var user = _userRegMapper.Map<User>(userRegDTO);
+
         var user = await _userRepository.GetUserByNameAsync(userName);
 
-        if (user == null)
+        if (user  == null)
         {
             //bruker ble ikke funnet
             return null;
         }
 
-        if (BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
-            var token = GenerateJwtToken(user);
-            return token;
+            //feil password
+            return null;
+          
         }
         //feil password
-        return null;
+        var token = CreateToken(user);
+
+        return token;
     }
-
-    private string GenerateJwtToken(User user)
+    
+    private string CreateToken(User user)
     {
-        var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-        new Claim(ClaimTypes.Name, user.Username)
-        // Legg til andre relevante krav etter behov
-    };
+        List<Claim> claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Name, "User"),
+            };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            _config.GetSection("AppSettings:Token").Value!));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(2), // Token utløper om 2 timer
-            SigningCredentials = creds
-        };
+        var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return tokenHandler.WriteToken(token);
+        return jwt;
     }
+
 }
 

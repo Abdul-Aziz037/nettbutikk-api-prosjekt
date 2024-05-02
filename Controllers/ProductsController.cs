@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using nettbutikk_api.Models.DTOs;
 using nettbutikk_api.Models.Entities;
@@ -17,7 +18,7 @@ public class ProductsController : ControllerBase
     {
         _productService = productService;
     }
-    [HttpGet(Name ="GetProducts")]
+    [HttpGet(Name ="GetProducts"), Authorize(Roles = "Admin,User")]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
        var products = await _productService.GetProductsAsync();
