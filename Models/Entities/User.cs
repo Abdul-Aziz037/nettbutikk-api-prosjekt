@@ -23,6 +23,9 @@ namespace nettbutikk_api.Models.Entities
         public string Email { get; set; } = string.Empty;
 
         [Required]
+        public bool IsAdmin { get; set; }
+
+        [Required]
         public DateTime Created { get; set; }
 
         [Required]

@@ -28,6 +28,7 @@ namespace nettbutikk_api.Repositories
 
         public async Task<User> AddUserAsync(User user)
         {
+            user.Created = DateTime.Now;
             var newUser = await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return newUser.Entity;
@@ -43,7 +44,7 @@ namespace nettbutikk_api.Repositories
                 userToUpdate.LastName = user.LastName;
                 userToUpdate.Username = user.Username;
                 userToUpdate.Email = user.Email;
-                userToUpdate.Updated = DateTime.UtcNow;
+                userToUpdate.Updated = DateTime.Now;
 
                 await _context.SaveChangesAsync();
             }

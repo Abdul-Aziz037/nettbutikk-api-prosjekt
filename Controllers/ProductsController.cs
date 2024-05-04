@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using nettbutikk_api.Models.DTOs;
 using nettbutikk_api.Models.Entities;
 using nettbutikk_api.Services;
+using nettbutikk_api.Services.Interfaces;
 
 namespace nettbutikk_api.Controllers;
 
@@ -13,12 +14,15 @@ public class ProductsController : ControllerBase
 {
     
     private readonly IProductService _productService;
+    private readonly IUserService _userService;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, IUserService userService)
     {
         _productService = productService;
+        _userService=userService;
     }
-    [HttpGet(Name ="GetProducts"), Authorize(Roles = "Admin,User")]
+    [HttpGet(Name ="GetProducts")]
+    [Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
        var products = await _productService.GetProductsAsync();
@@ -38,27 +42,68 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost(Name = "AddProduct")]
+    [Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<ProductDTO>> AddProductAsync(ProductDTO productDTO)
     {
-        var rest = await _productService.AddProductAsync(productDTO);
-        if (rest != null)
+        // henter brukeren id fra token
+        var userName = HttpContext.User.Identity?.Name!;
+        var user = await _userService.GetUserByNameAsync(userName);
+
+        productDTO.UserId = user.UserId;
+
+
+        var product = await _productService.AddProductAsync(productDTO);
+        if (product != null)
         {
-            return Ok(rest);
+            return Ok(product);
         }
         return BadRequest("Klarte ikke å legge til nytt product.");
     }
 
     [HttpPut("{productId}", Name = "UpdateProduct")]
+    [Authorize(Roles = "Admin,User")]
     public async Task<ActionResult<ProductDTO>> UpdateProductAsync(int productId, ProductDTO productDTO)
     {
+        var userName = HttpContext.User.Identity?.Name!;
+        var user = await _userService.GetUserByNameAsync(userName);
+
+
+        var product = await _productService.GetProductByIdAsync(productId);
+        if (product == null)
+        {
+            // Produktet ble ikke funnet
+            return NotFound("Produktet ble ikke funnet.");
+        }
+
+        if (product.UserId != user.UserId && !User.IsInRole("Admin"))
+        {
+            return Forbid("Du har ikke tilgang til å endre denne posten");
+        }
+
+
         var res = await _productService.UpdateProductAsync(productId, productDTO);
         return res != null ? Ok(res) : NotFound("fikk ikke oppdatert post");
     }
 
     [HttpDelete("{productId}", Name = "DeleteProduct")]
+    [Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<ProductDTO>> DeleteProductAsync(int productId)
     {
+        var userName = HttpContext.User.Identity?.Name!;
+        var user = await _userService.GetUserByNameAsync(userName);
+
+        var product = await _productService.GetProductByIdAsync(productId);
+        if (product == null)
+        {
+            // Produktet ble ikke funnet
+            return NotFound("produktet ble ikke funnet.");
+        }
+
+        if (product.UserId != user.UserId && !User.IsInRole("Admin"))
+        {
+            return Forbid();
+        }
         var res = await _productService.DeleteProductAsync(productId);
-        return res != null ? Ok(res) : BadRequest("fikk ikke slettet innlegget.");
+        return res != null ? Ok("Produktet ble slettet.") : BadRequest("fikk ikke slettet innlegget.");
     }
 }

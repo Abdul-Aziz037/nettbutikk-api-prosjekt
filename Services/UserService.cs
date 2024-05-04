@@ -109,11 +109,19 @@ public class UserService : IUserService
     
     private string CreateToken(User user)
     {
-        List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin"),
-                new Claim(ClaimTypes.Name, "User"),
-            };
+        List<Claim> claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username)
+        };
+
+        if (user.IsAdmin)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+        }
+        else
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "User"));
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _config.GetSection("AppSettings:Token").Value!));
@@ -131,5 +139,11 @@ public class UserService : IUserService
         return jwt;
     }
 
+    public async Task<UserDTO?> GetUserByNameAsync(string userName)
+    {
+        var user = await _userRepository.GetUserByNameAsync(userName);
+        return user != null ? _userMapper.Map<UserDTO>(user) : null;
+
+    }
 }
 

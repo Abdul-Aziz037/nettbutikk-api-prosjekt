@@ -42,6 +42,8 @@ public class ProductRepository : IProductRepository
             productToUpdate.Price = product.Price;
 
             await _context.SaveChangesAsync();
+
+            return productToUpdate;
         }
         return null;
     }
