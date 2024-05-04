@@ -5,6 +5,7 @@ namespace nettbutikk_api.Models.DTOs
     public class ProductDTO
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
         [Required(ErrorMessage = "produktnavn er påkrevd.")]
         [StringLength(50, ErrorMessage = "Type arrangement kan ikke være lengre enn 50 tegn.")]
         public string Name { get; set; } = string.Empty;

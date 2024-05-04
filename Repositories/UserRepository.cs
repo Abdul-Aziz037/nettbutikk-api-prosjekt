@@ -21,19 +21,20 @@ namespace nettbutikk_api.Repositories
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<User> AddUserAsync(User user)
         {
+            user.Created = DateTime.Now;
             var newUser = await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return newUser.Entity;
         }
 
-        public async Task<User> UpdateUserAsync(int userId, User user)
+        public async Task<User?> UpdateUserAsync(int userId, User user)
         {
             var userToUpdate = await _context.Users.FindAsync(userId);
 
@@ -43,14 +44,14 @@ namespace nettbutikk_api.Repositories
                 userToUpdate.LastName = user.LastName;
                 userToUpdate.Username = user.Username;
                 userToUpdate.Email = user.Email;
-                userToUpdate.Updated = DateTime.UtcNow;
+                userToUpdate.Updated = DateTime.Now;
 
                 await _context.SaveChangesAsync();
             }
             return userToUpdate;
         }
 
-        public async Task<User> DeleteUserByIdAsync(int userId)
+        public async Task<User?> DeleteUserByIdAsync(int userId)
         {
             var userToDelete = await GetUserByIdAsync(userId);
             if (userToDelete != null)
@@ -59,6 +60,14 @@ namespace nettbutikk_api.Repositories
                 await _context.SaveChangesAsync();
             }
             return userToDelete;
+        }
+
+        public async Task<User?> GetUserByNameAsync(string name)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.Equals(name));
+
+            return user;
+
         }
     }
 }

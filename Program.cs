@@ -5,20 +5,39 @@ using nettbutikk_api.Repositories;
 using nettbutikk_api.Mappers;
 using nettbutikk_api.Services;
 using nettbutikk_api.Services.Interfaces;
+using nettbutikk_api.Extensions;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+// Extension methods
+builder.AddSwaggerWithJWTAuthentication();
+
+//register Autentication
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            builder.Configuration.GetSection("AppSettings:Token").Value!))
+};
+});
+
 
 //register mappers
 builder.Services.AddAutoMapper(typeof(ProductMapper));
 builder.Services.AddAutoMapper(typeof(UserMapper));
+builder.Services.AddAutoMapper(typeof(UserRegMapper));
 
 // registrerer repos
 builder.Services.AddScoped<IProductRepository, ProductRepository>();

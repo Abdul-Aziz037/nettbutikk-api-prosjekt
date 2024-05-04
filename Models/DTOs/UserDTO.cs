@@ -1,7 +1,7 @@
 ﻿namespace nettbutikk_api.Models.DTOs
 {
     public record UserDTO(
-    int Id,
+    int UserId,
     string? UserName,
     string? FirstName,
     string? LastName,
