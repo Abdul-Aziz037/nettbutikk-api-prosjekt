@@ -87,6 +87,7 @@ public class UserService : IUserService
     {
         //var user = _userRegMapper.Map<User>(userRegDTO);
 
+        //tar burkernavn
         var user = await _userRepository.GetUserByNameAsync(userName);
 
         if (user  == null)
