@@ -22,7 +22,6 @@ public class ProductsController : ControllerBase
         _userService=userService;
     }
     [HttpGet(Name ="GetProducts")]
-    [Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
        var products = await _productService.GetProductsAsync();
@@ -49,8 +48,10 @@ public class ProductsController : ControllerBase
         var userName = HttpContext.User.Identity?.Name!;
         var user = await _userService.GetUserByNameAsync(userName);
 
-        productDTO.UserId = user.UserId;
-
+        if (user != null)
+        {
+            productDTO.UserId = user.UserId;
+        }
 
         var product = await _productService.AddProductAsync(productDTO);
         if (product != null)
@@ -71,18 +72,17 @@ public class ProductsController : ControllerBase
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
         {
-            // Produktet ble ikke funnet
             return NotFound("Produktet ble ikke funnet.");
         }
 
-        if (product.UserId != user.UserId && !User.IsInRole("Admin"))
+        if (product.UserId != user?.UserId && !User.IsInRole("Admin"))
         {
-            return Forbid("Du har ikke tilgang til å endre denne posten");
+            return Forbid();
         }
 
 
         var res = await _productService.UpdateProductAsync(productId, productDTO);
-        return res != null ? Ok(res) : NotFound("fikk ikke oppdatert post");
+        return res != null ? Ok(res) : NotFound("fikk ikke oppdatert produktet");
     }
 
     [HttpDelete("{productId}", Name = "DeleteProduct")]
@@ -95,15 +95,14 @@ public class ProductsController : ControllerBase
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
         {
-            // Produktet ble ikke funnet
             return NotFound("produktet ble ikke funnet.");
         }
 
-        if (product.UserId != user.UserId && !User.IsInRole("Admin"))
+        if (product.UserId != user?.UserId && !User.IsInRole("Admin"))
         {
             return Forbid();
         }
         var res = await _productService.DeleteProductAsync(productId);
-        return res != null ? Ok("Produktet ble slettet.") : BadRequest("fikk ikke slettet innlegget.");
+        return res != null ? Ok(res) : BadRequest("Fikk ikke slettet produktet");
     }
 }

@@ -70,7 +70,13 @@ public class UserService : IUserService
         return deletedUser != null ? _userMapper.Map<UserDTO>(deletedUser) : null;
     }
 
-    
+    public async Task<UserDTO?> GetUserByNameAsync(string userName)
+    {
+        var user = await _userRepository.GetUserByNameAsync(userName);
+        return user != null ? _userMapper.Map<UserDTO>(user) : null;
+
+    }
+
     public async Task<UserDTO?> RegisterAsync(UserRegDTO userRegDTO)
     {
         var user = _userRegMapper.Map<User>(userRegDTO);
@@ -85,24 +91,20 @@ public class UserService : IUserService
     
     public async Task<string?> LoginAsync(string userName, string password)
     {
-        //var user = _userRegMapper.Map<User>(userRegDTO);
 
-        //tar burkernavn
         var user = await _userRepository.GetUserByNameAsync(userName);
 
         if (user  == null)
         {
-            //bruker ble ikke funnet
             return null;
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
-            //feil password
             return null;
           
         }
-        //feil password
+
         var token = CreateToken(user);
 
         return token;
@@ -138,13 +140,6 @@ public class UserService : IUserService
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return jwt;
-    }
-
-    public async Task<UserDTO?> GetUserByNameAsync(string userName)
-    {
-        var user = await _userRepository.GetUserByNameAsync(userName);
-        return user != null ? _userMapper.Map<UserDTO>(user) : null;
-
     }
 }
 

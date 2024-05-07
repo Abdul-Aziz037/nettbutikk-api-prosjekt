@@ -8,6 +8,10 @@ using nettbutikk_api.Services.Interfaces;
 using nettbutikk_api.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using nettbutikk_api.Middelware;
+using Serilog;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +51,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+//validering
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation(config => config.DisableDataAnnotationsValidation = false);
 
 
 // registere DbMysql
@@ -54,6 +61,10 @@ builder.Services.AddDbContext<nettButikkDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
 
+//Logger
+builder.Services.AddTransient<GlobalExceptionMiddleware>();
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+    loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
 
 var app = builder.Build();
 
@@ -65,6 +76,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// registerer middelware
+app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 
