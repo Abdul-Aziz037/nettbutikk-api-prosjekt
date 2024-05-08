@@ -18,6 +18,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet(Name = "GetUsers")]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
     {
         var users = await _userService.GetAllUsersAsync();
@@ -25,6 +26,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{userId}", Name = "GetUserById")]
+    [Authorize]
     public async Task<ActionResult<UserDTO>> GetUserById(int userId)
     {
         var user = await _userService.GetUserByIdAsync(userId);

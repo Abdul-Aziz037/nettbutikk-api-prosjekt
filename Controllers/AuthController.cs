@@ -51,6 +51,6 @@ public class AuthController : ControllerBase
         {
             return Ok(token);
         }
-        return Unauthorized("Invalid username or password.");
+        return Unauthorized("Feil brukernavn eller password");
     }
 }
