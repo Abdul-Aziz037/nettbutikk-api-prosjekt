@@ -22,7 +22,7 @@ public class ProductsController : ControllerBase
         _userService=userService;
     }
     [HttpGet(Name ="GetProducts")]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
     {
        var products = await _productService.GetProductsAsync();
 
