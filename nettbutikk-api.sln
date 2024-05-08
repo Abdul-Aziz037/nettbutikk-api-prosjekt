@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nettbutikk-api", "nettbutikk-api.csproj", "{A44BF40F-8D3F-461C-9A2E-E7495662715A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nettbutikk-api", "nettbutikk-api.csproj", "{A44BF40F-8D3F-461C-9A2E-E7495662715A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{57B6C899-EA70-4090-803E-5D6D0A62CCF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettbutikk.UnitTests", "..\..\Tests\Nettbutikk.UnitTests\Nettbutikk.UnitTests.csproj", "{8767E069-E59C-434D-BD23-68B27114CEA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{A44BF40F-8D3F-461C-9A2E-E7495662715A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A44BF40F-8D3F-461C-9A2E-E7495662715A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A44BF40F-8D3F-461C-9A2E-E7495662715A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8767E069-E59C-434D-BD23-68B27114CEA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8767E069-E59C-434D-BD23-68B27114CEA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8767E069-E59C-434D-BD23-68B27114CEA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8767E069-E59C-434D-BD23-68B27114CEA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8767E069-E59C-434D-BD23-68B27114CEA2} = {57B6C899-EA70-4090-803E-5D6D0A62CCF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59577C0E-9D09-4E95-8A33-6E328DB212EC}
